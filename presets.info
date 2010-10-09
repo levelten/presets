@@ -1,0 +1,5 @@
+; $Id$
+name = "Presets"
+description = "An API for setting up a group of presets for a site."
+package = Presets
+core = 6.x
