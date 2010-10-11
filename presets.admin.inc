@@ -162,29 +162,34 @@ function presets_page($preset) {
 
 function presets_disabled_modules() {
   $modules = array();
+  $presets = presets_get_presets();
   $files = module_rebuild_cache();
-  foreach(seotools_modules() as $module => $info) {
-    if ($files[$module] && $files[$module]->status == 0) {
-      $dependencies_met = TRUE;
-      foreach($files[$module]->info['dependencies'] as $dependency) {
-        if (!$files[$dependency]) {
-          $dependencies_met = FALSE;
-        }
-      }
-      if ($dependencies_met) {
-        $modules[$module] = $files[$module]->info['name'];
-      }
-    }
-    foreach($info['submodules'] as $submodule) {
-      if ($files[$submodule] && $files[$submodule]->status == 0) {
+  foreach($presets as $preset => $preset_info){
+    foreach($preset_info['modules'] as $module => $info) {
+      if ($files[$module] && $files[$module]->status == 0) {
         $dependencies_met = TRUE;
-        foreach($files[$submodule]->info['dependencies'] as $dependency) {
+        foreach($files[$module]->info['dependencies'] as $dependency) {
           if (!$files[$dependency]) {
             $dependencies_met = FALSE;
           }
         }
         if ($dependencies_met) {
-          $modules[$submodule] = $files[$submodule]->info['name'];
+          $modules[$module] = $files[$module]->info['name'];
+        }
+      }
+      if (!empty($info['submodules'])) {
+        foreach($info['submodules'] as $submodule) {
+          if ($files[$submodule] && $files[$submodule]->status == 0) {
+            $dependencies_met = TRUE;
+            foreach($files[$submodule]->info['dependencies'] as $dependency) {
+              if (!$files[$dependency]) {
+                $dependencies_met = FALSE;
+              }
+            }
+            if ($dependencies_met) {
+              $modules[$submodule] = $files[$submodule]->info['name'];
+            }
+          }
         }
       }
     }

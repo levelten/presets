@@ -1,5 +1,5 @@
 <?php
-// $Id: seotools.module,v 1.3 2010/09/26 00:36:50 tomdude48 Exp $
+// $Id:$
 
 /**
  * @file
@@ -81,10 +81,10 @@ function presets_form_alter($form, $form_state, $form_id) {
   if ($form_id == 'system_modules') {
     if (empty($form_state['post']) && !$form_state['submitted']) {
       // On the module enable page, set a message with a shortcut to enable recommended modules.
-      include_once(drupal_get_path('module', 'seotools') . '/seotools.admin.inc');
+      include_once(drupal_get_path('module', 'presets') . '/presets.admin.inc');
       $output = '';
       $js = '';
-      foreach(seotools_disabled_modules() as $module => $name) {
+      foreach(presets_disabled_modules() as $module => $name) {
         $output .= "<div>$name ($module)</div>";
         $js .= "$('input#edit-status-" . str_replace('_', '-', $module) . "').attr('checked', 'checked');";
       }
