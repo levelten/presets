@@ -63,6 +63,11 @@ function presets_page($preset) {
         }
       }
       elseif ($files[$module]->status == 1) {
+        $settings[$module] = array(
+          'title' => $module,
+          'value' => $files[$module]->info['name'],
+          'severity' => 0,
+        );
         $config[$module] = $info;
       }
       if (!empty($info['submodules'])) {
