@@ -32,48 +32,17 @@ function presets_page($preset) {
   $download = array();
   $enable = array();
   $config = array();
+
+  // Do the module checks.
+  $settings = array();
+  $settings['title'] = array(
+    'title' => 'Modules',
+    'value' => 'Module',
+    'action' => 'Action',
+    'severity' => -1,
+  );
   foreach($presets[$preset]['modules'] as $module => $info) {
     if (!$files[$module]) {
-      $download[$module] = $info;
-    }
-    else {
-      if (!empty($info['submodules'])) {
-        foreach($info['submodules'] as $submodule) {
-          if ($files[$submodule]->status == 0) {
-            $enable[$submodule] = $files[$submodule]->info;
-            foreach($files[$submodule]->info['dependencies'] as $dependency) {
-              $dependencies[] = $dependency;
-            }
-          }
-        }
-      }
-      if ($files[$module]->status == 0) {
-        $enable[$module] = $info;
-        foreach($files[$module]->info['dependencies'] as $dependency) {
-          $dependencies[] = $dependency;
-        }
-      }
-      elseif ($files[$module]->status == 1) {
-        $config[$module] = $info;
-      }
-    }
-  }
-
-  foreach($dependencies as $dependency) {
-    if (!$files[$dependency]) {
-      $download[] = $dependency;
-    }
-  }
-
-  if (!empty($download)) {
-    $settings = array();
-    $settings['title'] = array(
-      'title' => 'Download Modules',
-      'value' => 'Module',
-      'action' => 'Action',
-      'severity' => -1,
-    );
-    foreach($download as $module => $info) {
       $settings[$module] = array(
         'title' => $module,
         'value' => $info['name'],
@@ -81,65 +50,59 @@ function presets_page($preset) {
         'severity' => 2,
       );
     }
-    $output .= theme('presets_report', $settings);
+    else {
+      if ($files[$module]->status == 0) {
+        $settings[$module] = array(
+          'title' => $module,
+          'value' => $files[$module]->info['name'],
+          'action' => l('Enable', 'admin/build/modules'),
+          'severity' => 1,
+        );
+        foreach($files[$module]->info['dependencies'] as $dependency) {
+          $dependencies[] = $dependency;
+        }
+      }
+      elseif ($files[$module]->status == 1) {
+        $config[$module] = $info;
+      }
+      if (!empty($info['submodules'])) {
+        foreach($info['submodules'] as $submodule) {
+          if ($files[$submodule]->status == 0) {
+            $settings[$submodule] = array(
+              'title' => $module,
+              'value' => $files[$submodule]->info['name'],
+              'action' => l('Enable', 'admin/build/modules'),
+              'severity' => 1,
+            );
+            foreach($files[$submodule]->info['dependencies'] as $dependency) {
+              $dependencies[] = $dependency;
+            }
+          }
+        }
+      }
+    }
   }
-  else {
-    $settings = array();
-    $settings['title'] = array(
-      'title' => 'Download Modules',
-      'value' => 'Module',
-      'description' => 'All recommended modules have been downloaded',
-      'severity' => 0,
+  if (!empty($presets[$preset]['modules_footer'])) {
+    $settings['footer'] = array(
+      'value' => $presets[$preset]['modules_footer'],
+      'severity' => -1,
     );
-    $output .= theme('presets_report', $settings);
   }
+  $output .= theme('presets_report', $settings);
 
-  $form['enable'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Enable these modules'
-  );
-
-  if (!empty($enable)) {
+  // Do per module configs.
+  foreach($config as $module => $info) {
     $settings = array();
     $settings['title'] = array(
-      'title' => 'Enable Modules',
-      'value' => 'Module',
+      'title' => $info['name'],
+      'value' => 'Setting',
       'action' => 'Action',
       'severity' => -1,
     );
-    foreach($enable as $module => $info) {
-      $settings[$module] = array(
-        'title' => $module,
-        'value' => $info['name'],
-        'action' => l('Enable', 'admin/build/modules'),
-        'severity' => 2,
-      );
-    }
-    $output .= theme('presets_report', $settings);
-  }
-  else {
-    $settings = array();
-    $settings['title'] = array(
-      'title' => 'Enable Modules',
-      'value' => 'Module',
-      'description' => 'All recommended modules have been enabled',
-      'severity' => 0,
-    );
-    $output .= theme('presets_report', $settings);
-  }
-
-  foreach($config as $module => $info) {
     if ($info['settings']) {
       if ($presets[$preset]['file']) {
         include_once(drupal_get_path('module', $preset) . '/' . $presets[$preset]['file']);
       }
-      $settings = array();
-      $settings['title'] = array(
-        'title' => $info['name'],
-        'value' => 'Setting',
-        'action' => 'Action',
-        'severity' => -1,
-      );
       foreach($info['settings'] as $setting) {
         $function = $preset . '_' . $module . '_' . $setting;
         if (function_exists($function)) {
@@ -147,17 +110,27 @@ function presets_page($preset) {
           if ($settings[$setting]['severity'] != 0 && function_exists($function . '_reset')) {
             $settings[$setting]['action'] = l('Reset', 'admin/presets/settings/' . $preset . '/' . $module . '/' . $setting);
           }
-          $output .= theme('presets_report', $settings);
 
         }
       }
     }
+    if (count($settings) == 1) {
+      $settings['empty'] = array(
+        'title' => 'Configured',
+        'value' => 'This module does not have any settings in this preset',
+        'severity' => -1,
+      );
+    }
+    elseif (!empty($info['footer'])) {
+      $settings['footer'] = array(
+        'value' => $info['footer'],
+        'severity' => -1,
+      );
+    }
+    $output .= theme('presets_report', $settings);
   }
 
   return $output;
-  //Add the system buttons to the form
-//  $form = system_settings_form($form);
-//  return $form;
 }
 
 function presets_disabled_modules() {
@@ -243,7 +216,12 @@ function theme_presets_report($requirements) {
         $output .= '<tr class="'. $class .' merge-up"><td colspan="3">'. $requirement['description'] .'</td></tr>';
       }
       else {
-        $output .= '<tr class="'. $class .'"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td><td>'. $requirement['action'] .'</td></tr>';
+        if (!empty($requirement['title'])) {
+          $output .= '<tr class="'. $class .'"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td><td>'. $requirement['action'] .'</td></tr>';
+        }
+        else {
+          $output .= '<tr class="'. $class .'"><td colspan="2">'. $requirement['value'] .'</td><td>'. $requirement['action'] .'</td></tr>';
+        }
       }
     }
   }
