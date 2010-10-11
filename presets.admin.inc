@@ -98,13 +98,13 @@ function presets_page($preset) {
   // Do per module configs.
   foreach($config as $module => $info) {
     $settings = array();
-    $settings['title'] = array(
-      'title' => $info['name'],
-      'value' => 'Setting',
-      'action' => 'Action',
-      'severity' => -1,
-    );
     if ($info['settings']) {
+      $settings['title'] = array(
+        'title' => $info['name'],
+        'value' => 'Setting',
+        'action' => 'Action',
+        'severity' => -1,
+      );
       if ($presets[$preset]['file']) {
         include_once(drupal_get_path('module', $preset) . '/' . $presets[$preset]['file']);
       }
@@ -118,21 +118,14 @@ function presets_page($preset) {
 
         }
       }
+      if (!empty($info['footer'])) {
+        $settings['footer'] = array(
+          'value' => $info['footer'],
+          'severity' => -1,
+        );
+      }
+      $output .= theme('presets_report', $settings);
     }
-    if (count($settings) == 1) {
-      $settings['empty'] = array(
-        'title' => 'Configured',
-        'value' => 'This module does not have any settings in this preset',
-        'severity' => -1,
-      );
-    }
-    elseif (!empty($info['footer'])) {
-      $settings['footer'] = array(
-        'value' => $info['footer'],
-        'severity' => -1,
-      );
-    }
-    $output .= theme('presets_report', $settings);
   }
 
   return $output;
