@@ -37,7 +37,8 @@ function presets_page($preset) {
   $settings = array();
   $settings['title'] = array(
     'title' => 'Modules',
-    'value' => 'Module',
+    'value' => 'Name',
+    'version' => 'Version',
     'action' => 'Action',
     'severity' => -1,
   );
@@ -55,6 +56,7 @@ function presets_page($preset) {
         $settings[$module] = array(
           'title' => $module,
           'value' => $files[$module]->info['name'],
+          'version' => $files[$module]->info['version'],
           'action' => l('Enable', 'admin/build/modules'),
           'severity' => 1,
         );
@@ -66,6 +68,7 @@ function presets_page($preset) {
         $settings[$module] = array(
           'title' => $module,
           'value' => $files[$module]->info['name'],
+          'version' => $files[$module]->info['version'],
           'severity' => 0,
         );
         $config[$module] = $info;
@@ -210,15 +213,15 @@ function theme_presets_report($requirements) {
 
       // Output table row(s)
       if (!empty($requirement['description'])) {
-        $output .= '<tr class="'. $class .' merge-down"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td><td>'. $requirement['action'] .'</td></tr>';
+        $output .= '<tr class="'. $class .' merge-down"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td><td>'. $requirement['version'] .'</td><td>'. $requirement['action'] .'</td></tr>';
         $output .= '<tr class="'. $class .' merge-up"><td colspan="3">'. $requirement['description'] .'</td></tr>';
       }
       else {
         if (!empty($requirement['title'])) {
-          $output .= '<tr class="'. $class .'"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td><td>'. $requirement['action'] .'</td></tr>';
+          $output .= '<tr class="'. $class .'"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td><td>'. $requirement['version'] .'</td><td>'. $requirement['action'] .'</td></tr>';
         }
         else {
-          $output .= '<tr class="'. $class .'"><td colspan="2">'. $requirement['value'] .'</td><td>'. $requirement['action'] .'</td></tr>';
+          $output .= '<tr class="'. $class .'"><td colspan="2">'. $requirement['value'] .'</td><td>'. $requirement['version'] .'</td><td>'. $requirement['action'] .'</td></tr>';
         }
       }
     }
