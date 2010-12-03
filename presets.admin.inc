@@ -47,6 +47,7 @@ function presets_page($preset) {
       $settings[$module] = array(
         'title' => $module,
         'value' => $info['name'],
+        'version' => $info['version'],
         'action' => l('Download', 'http://drupal.org/project/' . $module, array('attributes' => array('target' => '_blank'))),
         'severity' => 2,
       );
@@ -60,6 +61,11 @@ function presets_page($preset) {
           'action' => l('Enable', 'admin/build/modules'),
           'severity' => 1,
         );
+        // If this is the wrong version, bump the severity and make a note.
+        if ($files[$module]->info['version'] != $info['version']) {
+          $settings[$module]['version'] .= ' (Recommended: ' . $info['version'] . ')';
+          $settings[$module]['severity'] = 2;
+        }
         foreach($files[$module]->info['dependencies'] as $dependency) {
           $dependencies[] = $dependency;
         }
@@ -71,6 +77,11 @@ function presets_page($preset) {
           'version' => $files[$module]->info['version'],
           'severity' => 0,
         );
+        // If this is the wrong version, bump the severity and make a note.
+        if ($files[$module]->info['version'] != $info['version']) {
+          $settings[$module]['version'] .= ' (Recommended: ' . $info['version'] . ')';
+          $settings[$module]['severity'] = 1;
+        }
         $config[$module] = $info;
       }
       if (!empty($info['submodules'])) {
@@ -79,8 +90,9 @@ function presets_page($preset) {
             $settings[$submodule] = array(
               'title' => $module,
               'value' => $files[$submodule]->info['name'],
+              'version' => $settings[$module]['version'],
               'action' => l('Enable', 'admin/build/modules'),
-              'severity' => 1,
+              'severity' => $settings[$module]['severity'],
             );
             foreach($files[$submodule]->info['dependencies'] as $dependency) {
               $dependencies[] = $dependency;
