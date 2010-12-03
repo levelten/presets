@@ -62,7 +62,7 @@ function presets_page($preset) {
           'severity' => 1,
         );
         // If this is the wrong version, bump the severity and make a note.
-        if ($files[$module]->info['version'] != $info['version']) {
+        if (isset($info['version']) && $files[$module]->info['version'] != $info['version']) {
           $settings[$module]['version'] .= ' (Recommended: ' . $info['version'] . ')';
           $settings[$module]['severity'] = 2;
         }
@@ -78,7 +78,7 @@ function presets_page($preset) {
           'severity' => 0,
         );
         // If this is the wrong version, bump the severity and make a note.
-        if ($files[$module]->info['version'] != $info['version']) {
+        if (isset($info['version']) && $files[$module]->info['version'] != $info['version']) {
           $settings[$module]['version'] .= ' (Recommended: ' . $info['version'] . ')';
           $settings[$module]['severity'] = 1;
         }
