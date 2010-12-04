@@ -60,6 +60,7 @@ function hook_presets() {
  * return array(
  *   'title' => 'Title',
  *   'value' => 'Value',
+ *   'description' => 'Description',
  *   'severity' => REQUIREMENT_ERROR,
  * );
  *
