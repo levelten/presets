@@ -142,6 +142,7 @@ function presets_page($preset) {
       $output .= theme('presets_report', $settings);
     }
   }
+  $output .= l('Reset all settings that can be reset.', 'admin/presets/' . $preset . '/reset');
 
   return $output;
 }
@@ -202,6 +203,27 @@ function presets_reset_callback($preset, $module, $setting) {
 }
 
 /**
+ * Form to reset all settings on a preset
+ */
+function presets_reset_all($preset) {
+  $presets = presets_get_presets();
+  if ($presets[$preset]['file']) {
+    include_once(drupal_get_path('module', $preset) . '/' . $presets[$preset]['file']);
+  }
+  foreach($presets[$preset]['modules'] as $module => $info) {
+    if (is_array($info['settings'])) {
+      foreach($info['settings'] as $setting) {
+        $function = $preset . '_' . $module . '_' . $setting . '_reset';
+        if (function_exists($function)) {
+          $function();
+        }
+      }
+    }
+  }
+  drupal_goto('admin/presets/' . $preset);
+}
+
+/**
  * Theme settings presets report.
  *
  * @param $requirements
@@ -242,4 +264,3 @@ function theme_presets_report($requirements) {
   $output .= '</table>';
   return $output;
 }
-

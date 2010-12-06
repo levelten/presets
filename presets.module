@@ -38,6 +38,13 @@ function presets_menu() {
     'access arguments' => array('administer presets'),
     'file' => 'presets.admin.inc',
   );
+  $items['admin/presets/%/reset'] = array(
+    'title' => 'Reset',
+    'page callback' => 'presets_reset_all',
+    'page arguments' => array(2),
+    'access arguments' => array('administer presets'),
+    'file' => 'presets.admin.inc',
+  );
   return $items;
 }
 
