@@ -2,7 +2,7 @@
 
 DESCRIPTION
 --------------------------
-The Preset module allows another module to define a set of presets for given functionality.  Often times
+The Presets module allows another module to define a set of presets for given functionality.  Often times
 in order to get complex functionality to work, many modules are required to be downloaded and configured
 correctly.  Presets helps by allowing a module to check and fix these settings so that end users
 can get everything set up correctly.
@@ -18,9 +18,9 @@ implements presets for any new functionality to occur.
 
 MODULES THAT IMPLEMENT PRESETS
 ------------------------------
-http://www.drupal.org/project/seotools
+http://www.drupal.org/project/presets
 
 CREDITS
 ----------------------------
-Authored and maintained by Tom McCracken <tom AT leveltendesign DOT com> twitter: @levelten_tom
+Authored and maintained by Randall Knutson <randallk AT leveltendesign DOT com>
 Sponsored by LevelTen Interactive - http://www.leveltendesign.com
