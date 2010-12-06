@@ -213,9 +213,15 @@ function presets_reset_all($preset) {
   foreach($presets[$preset]['modules'] as $module => $info) {
     if (is_array($info['settings'])) {
       foreach($info['settings'] as $setting) {
-        $function = $preset . '_' . $module . '_' . $setting . '_reset';
-        if (function_exists($function)) {
-          $function();
+        $check_function = $preset . '_' . $module . '_' . $setting;
+        if (function_exists($check_function)) {
+          $result = $check_function();
+          if ($result['severity'] != REQUIREMENT_OK) {
+            $function = $preset . '_' . $module . '_' . $setting . '_reset';
+            if (function_exists($function)) {
+              $function();
+            }
+          }
         }
       }
     }
