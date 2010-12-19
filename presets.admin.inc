@@ -48,7 +48,7 @@ function presets_page($preset) {
         'title' => $module,
         'value' => $info['name'],
         'version' => $info['version'],
-        'action' => l('Download', 'http://drupal.org/project/' . $module, array('attributes' => array('target' => '_blank'))),
+        'action' => l('Download', 'http://drupal.org/project/' . (isset($info['project'])?$info['project']:$module), array('attributes' => array('target' => '_blank'))),
         'severity' => 2,
       );
     }

@@ -13,10 +13,11 @@ function hook_presets() {
       'title' => 'SEO Tools', // this is the title that will be displayed on the admin/presets/seotools page
       'description' => 'Presets for SEO optimization',
       'file' => 'plugins/seotools.presets.inc', // If the preset definition or callback functions are stored in another file.
-      'modules_footer' => l('Download all modules', 'http://leveltendesign.com') . ' from LevelTen Design',
+      'modules_footer' => l('Download all modules', 'http://leveltendesign.com') . ' from LevelTen Interactive',
       'modules' => array( // These are modules that will be required for this preset.
         'seotools' => array( // The project name from drupal.org for this module.
           'name' => 'SEO Tools',
+          'project' => 'seotools', // (optional) the drupal.org project name.  Defaults to module name.
           'footer' => 'To change the settings, go to ' . l('admin/settings/seotools', 'admin/settings/seotools'),
           'settings' => array( // Settings will be function callbacks for each setting.  The function name will be {preset}_{module}_{setting}();
             'seotools_uid'
