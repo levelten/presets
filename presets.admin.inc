@@ -90,11 +90,11 @@ function presets_page($preset) {
         foreach($info['submodules'] as $submodule) {
           if ($files[$submodule]->status == 0) {
             $settings[$submodule] = array(
-              'title' => $module,
+              'title' => $submodule,
               'value' => $files[$submodule]->info['name'],
               'version' => $settings[$module]['version'],
               'action' => l('Enable', 'admin/build/modules'),
-              'severity' => $settings[$module]['severity'],
+              'severity' => 1,
             );
             foreach($files[$submodule]->info['dependencies'] as $dependency) {
               $dependencies[] = $dependency;
