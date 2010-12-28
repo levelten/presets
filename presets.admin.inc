@@ -1,5 +1,5 @@
 <?php
-// $Id$
+// $Id:$
 /**
  * @file * Admin include file. 
 */
@@ -32,6 +32,8 @@ function presets_page($preset) {
   $download = array();
   $enable = array();
   $config = array();
+
+  $output .= t('Refresh this page to see any changes.');
 
   // Do the module checks.
   $settings = array();
