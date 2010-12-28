@@ -12,6 +12,7 @@ function hook_presets() {
   return array(
     'seotools' => array( // This defines the preset (you can have multuple presets in one hook file)
       'title' => 'SEO Tools', // this is the title that will be displayed on the admin/presets/seotools page
+      'version' => 1, // Set the version for the presets.  Enforces that this is supposed to be a preset.
       'description' => 'Presets for SEO optimization',
       'file' => 'plugins/seotools.presets.inc', // If the preset definition or callback functions are stored in another file.
       'modules_footer' => l('Download all modules', 'http://leveltendesign.com') . ' from LevelTen Interactive',

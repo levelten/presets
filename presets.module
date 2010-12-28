@@ -70,6 +70,12 @@ function presets_get_presets($reset = FALSE) {
     }
     else {
       $presets = module_invoke_all('presets');
+      // Ensure that we are supposed to be calling this.
+      foreach($presets as $id => $preset) {
+        if ($preset['version'] != 1) {
+          unset($presets[$id]);
+        }
+      }
       drupal_alter('presets', $presets);
       cache_set('presets', $presets);
     }
