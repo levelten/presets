@@ -207,7 +207,7 @@ function presets_reset_callback($preset, $module, $setting) {
 /**
  * Form to reset all settings on a preset
  */
-function presets_reset_all($preset) {
+function presets_reset_all($preset, $redirect = TRUE) {
   $presets = presets_get_presets();
   if ($presets[$preset]['file']) {
     include_once(drupal_get_path('module', $preset) . '/' . $presets[$preset]['file']);
@@ -228,7 +228,9 @@ function presets_reset_all($preset) {
       }
     }
   }
-  drupal_goto('admin/presets/' . $preset);
+  if ($redirect) {
+    drupal_goto('admin/presets/' . $preset);
+  }
 }
 
 /**
